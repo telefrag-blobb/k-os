@@ -1,7 +1,8 @@
 // Anzupassende
-SET ZIELORBIT TO 90000. // Zielorbit in Metern
-SET MAXSTUFE TO 1. // Letzte Stufe, die aktiviert werden darf.
-set sicherheitsHoehe to 1000. // Minimale hoehe (RADAR, in Metern), unterhalb derer beim Start keine Inklination des Raumschiffes vorgenommen wird.
+
+DECLARE parameter ZIELORBIT is 90000. // Zielorbit in Metern
+DECLARE parameter MAXSTUFE is 1. // Letzte Stufe, die aktiviert werden darf.
+DECLARE parameter sicherheitsHoehe is 1000. // Minimale hoehe (RADAR, in Metern), unterhalb derer beim Start keine Inklination des Raumschiffes vorgenommen wird.
 
 // Interne Variablen
 SET COUNTDOWN TO -10.
@@ -131,42 +132,9 @@ set deltaV to (orbitalVelocity - apVelocity).
 set circNode to node(time:seconds + eta:apoapsis,0,0,deltaV).
 add circNode.
 
-// TODO: Der Vorlauf und der genaue Angriffswinkel sollte berechnet werden.
-SET ZUENDUNGSVORLAUF TO 20.
-UNTIL ETA:APOAPSIS < ZUENDUNGSVORLAUF {
-    print "Sek. bis Orbitalmaneuver: " AT (0,8).
-    print ROUND(ETA:APOAPSIS - ZUENDUNGSVORLAUF, 0) + " " AT (26,8).
-    wait 1.
-}.
+// Knoten ausfuehren
+run ausfuehren.
 
-print "                                        " at (0,8).
-
-//SET max TO 15.
-//SET min TO -15.
-SET angriffswinkel TO 0.
-lock steering to prograde - R(0,angriffswinkel,0).
-wait 1.
-SET MINORBIT TO ZIELORBIT-1000.
-SET MAXORBIT TO ZIELORBIT+1000.
-UNTIL SHIP:PERIAPSIS >= MINORBIT {
-    
-    //IF ETA:APOAPSIS < 20 AND APOAPSIS > ZIELORBIT+500 AND angriffswinkel < max {
-    //    SET angriffswinkel TO angriffswinkel + 1.
-    //} ELSE IF ETA:APOAPSIS < 20 AND APOAPSIS < ZIELORBIT-500 AND angriffswinkel > min {
-    //    SET angriffswinkel TO angriffswinkel - 1.
-    //}.
-    lock steering to prograde - R(0,angriffswinkel,0). 
-    print "Angriffswinkel: " AT (0,8).
-    print angriffswinkel + " " AT (16,8).
-    
-    UNTIL ETA:APOAPSIS < 20 {
-      LOCK THROTTLE TO 0.
-      wait 0.5.
-    }.
-    
-    wait 0.5.
-    LOCK THROTTLE TO 1.
-}.
 SET ABGESCHLOSSEN TO 1.
 LOCK THROTTLE TO 0.
 SET SHIP:CONTROL:PILOTMAINTHROTTLE TO 0.
