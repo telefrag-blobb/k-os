@@ -1,5 +1,15 @@
 CLEARSCREEN.
 
+function printData {
+
+	PRINT "TARGET ORBIT " + orbt + " " at (0,0).
+	PRINT "APOAPSIS " + round(APOAPSIS,0) + " " at (0,1).
+	PRINT "INCLINATION CURRENT " + round(orbit:inclination,5) + "      " at (0,2).
+	PRINT "INCLINATION DESIRED " + round(incl,5) + "      " at (0,3).
+	PRINT "CORRECTING BY " + round(crrct,5) + "      " at (0,4).
+	PRINT "COMPENSATING BY " + round(compensate,5) + "      " at (0,5).
+	PRINT "COS " + round(COS(hdng),5) + "      " at (0,6).
+}
 
 //SETUP
 
@@ -115,16 +125,8 @@ CLEARSCREEN.
 					LOCK STEERING to HEADING(crrct+hdng+compensate,90-MIN(90,(PZ*AGG*90))).
 					
 					//debug routine
-						CLEARSCREEN.
-						PRINT "TARGET ORBIT " + orbt.
-						PRINT "APOAPSIS " + APOAPSIS.
-						PRINT "INCLINATION CURRENT " + orbit:inclination.
-						PRINT "INCLINATION DESIRED " + incl.
-						PRINT "CORRECTING BY " + crrct.
-						PRINT "COMPENSATING BY " + compensate.
-						PRINT "COS " + COS(hdng).
-						WAIT 0.01.
-				
+					printData().
+					WAIT 0.01.
 				}
 				
 				set PZ to APOAPSIS/orbt.
@@ -132,14 +134,7 @@ CLEARSCREEN.
 				
 
 				//debug routine
-					CLEARSCREEN.
-					PRINT "TARGET ORBIT " + orbt.
-					PRINT "APOAPSIS " + APOAPSIS.
-					PRINT "INCLINATION CURRENT " + orbit:inclination.
-					PRINT "INCLINATION DESIRED " + incl.
-					PRINT "CORRECTING BY " + crrct.
-					PRINT "COMPENSATING BY " + compensate.
-					PRINT "COS " + COS(hdng).
+					printData().
 					WAIT 0.01.
 			}
 			lock throttle to 0.
@@ -164,3 +159,4 @@ CLEARSCREEN.
 				
 			run burntime(nextnode:eta).
 			run maneuvernode.
+CLEARSCREEN.
