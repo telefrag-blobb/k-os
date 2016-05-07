@@ -88,6 +88,9 @@ set compensate to -20*COS(hdng).
 LOCK TICTOC to 1.
 SET exit to 0.
 
+// Halterungen loesen
+run releaseclamp.
+
 //routine
 
 until APOAPSIS > orbt {
