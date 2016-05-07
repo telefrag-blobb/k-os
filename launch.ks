@@ -88,6 +88,18 @@ set compensate to -20*COS(hdng).
 LOCK TICTOC to 1.
 SET exit to 0.
 
+// Triebwerke Schub aufbauen lassen
+SET totalThrust TO 0.
+UNTIL totalThrust < SHIP:MAXTHRUST {
+    SET totalThrust TO 0.
+
+    LIST ENGINES IN engList.
+    FOR eng IN engList {
+        IF eng:IGNITION SET totalThrust TO totalThrust + eng:THRUST.
+    }.
+    wait 0.5.
+}.
+
 // Halterungen loesen
 run releaseclamp.
 
