@@ -28,12 +28,12 @@ function ermittlePort {
 }
 
 function dock {
-
-  // Eigener Andockport
-  parameter eigenerPort is "egal".
   
   // Ziel
   parameter ziel is target.
+
+  // Eigener Andockport
+  parameter eigenerPort is "egal".
   
   // Port ermitteln
   if (eigenerPort = "egal" or not (eigenerPort:typename = "DockingPort")) {
