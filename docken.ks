@@ -36,11 +36,11 @@ function dock {
   parameter eigenerPort is "egal".
   
   // Port ermitteln
-  if (eigenerPort = "egal" or not (eigenerPort:typename = "DockingPort")) {
+  if (eigenerPort = "egal") {
     set eigenerPort to ermittlePort().
   }
 
-  if ((eigenerPort = "n/v") or (not (eigenerPort:typename = "DockingPort"))) {
+  if (eigenerPort = "n/v") {
     // Nichts zu machen ...
 	print "Andocken nicht moeglich -- kein passender freier Andockport am eigenen Schiff vorhanden.".
 	return 1.
