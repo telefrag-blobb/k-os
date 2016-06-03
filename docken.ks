@@ -38,12 +38,11 @@ function dock {
   // Port ermitteln
   if (eigenerPort = "egal") {
     set eigenerPort to ermittlePort().
-  }
-
-  if (eigenerPort = "n/v") {
-    // Nichts zu machen ...
-	print "Andocken nicht moeglich -- kein passender freier Andockport am eigenen Schiff vorhanden.".
-	return 1.
+	if (eigenerPort = "n/v") {
+      // Nichts zu machen ...
+	  print "Andocken nicht moeglich -- kein passender freier Andockport am eigenen Schiff vorhanden.".
+	  return 1.
+    }
   }
   
   print "Gewaehltes Ziel ist vom Typ "+ziel:typename.
