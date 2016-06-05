@@ -69,32 +69,18 @@ function dock {
 
 	print "Docke mit '"+eigenerPort:title+"' an Port '"+zielPort:title+"' von Schiff '"+zielPort:ship:name+"'.".
 
-	print "Rot:"+eigenerPort:rotation.
-	print "Fac:"+eigenerPort:portfacing.
-	print "!Fc:"+eigenerPort:portfacing:inverse.
-	print "Pos:"+eigenerPort:nodeposition.
-	print "Sta:"+eigenerPort:state.
-	print "Ndt:"+eigenerPort:nodetype.
-	print "Rng:"+eigenerPort:acquirerange.
-	print "=======".
-	print "   Rot:"+zielPort:rotation.
-	print "   Fac:"+zielPort:portfacing.
-	print "   !Fc:"+zielPort:portfacing:inverse.
-	print "   Pos:"+zielPort:nodeposition.
-	print "   Sta:"+zielPort:state.
-	print "   Ndt:"+zielPort:nodetype.
-	print "   Rng:"+zielPort:acquirerange.
-	print "=======".
-
 	// DOCKEN
 	rcs off.
 	sas off.
 	eigenerPort:controlFrom.
-	lock steering to zielPort:portfacing-r(180,0,0).
-	//lock steering to zielPort:portfacing.
+	//lock steering to zielPort:portfacing-r(180,0,0).
 
+	// Berechne Zielpunkt mit Sicherheitsabstand
+	lock zielPunktA to ((zielPort:facing:vector*30)+zielPort:nodeposition).
+	lock steering to zielPunktA.
+	
 	set auszeit to 8.
-	until ((auszeit <= 0) or (eigenerPort:portFacing = zielPort:portfacing-r(180,0,0))) {
+	until (auszeit <= 0) {
 		//print steering.
 		wait 1.
 		set auszeit to (auszeit - 1).
@@ -117,74 +103,38 @@ function dock {
 	print "   Rng:"+zielPort:acquirerange.
 	print "=======".
 
+	
+	// 1. Aus Zielportrichtung Vektor -> A berechnen.
+	// 2. Vektor von eigener Postition zu A berechnen. 
+	
+	 
+	// TODO Ggf. dem Zielschiff ausweichen
+	clearscreen.
+	
 	rcs on.
-	set toleranz to 0.1.
-	set vGross to 0.6.
-	set vKlein to 0.3.
-
-	set letztesX to zielPort:nodeposition:x.
-	set letztesY to zielPort:nodeposition:y.
-	set letztesZ to zielPort:nodeposition:z.
+	set ship:control:fore to 0.5.
 	wait 1.
+	set ship:control:fore to 0.
+	rcs off.
 
-	until (zielPort:nodeposition:x < 1) and (zielPort:nodeposition:x > -1) and (zielPort:nodeposition:y < 1) and (zielPort:nodeposition:y > -1) and (zielPort:nodeposition:z < 1) and (zielPort:nodeposition:z > -1) {
-		// Gewuenschte Geschwindigkeit berechnen
-		set zielVx to 0.
-		set zielVy to 0.
-		set zielVz to 0.
-
-		if (zielPort:nodeposition:x < -10) {
-			set zielVx to vGross.
-		} else if (zielPort:nodeposition:x < -5) {
-			set zielVx to vKlein.
-		}
-		if (zielPort:nodeposition:y < -10) {
-			set zielVy to vGross.
-		} else if (zielPort:nodeposition:y < -5) {
-			set zielVy to vKlein.
-		}
-		if (zielPort:nodeposition:z < -10) {
-			set zielVz to vGross.
-		} else if (zielPort:nodeposition:z < -5) {
-			set zielVz to vKlein.
-		}
-
-		// Relative Geschwindigkeit berechnen.
-		set istVx to letztesX-zielPort:nodeposition:x.
-		set istVy to letztesY-zielPort:nodeposition:y.
-		set istVz to letztesZ-zielPort:nodeposition:z.
-
-		// TODO ... funktionierend machen.
-		
-		if (istVx < (zielVx-toleranz)) and (istVx < (zielVx+toleranz)) {
-			set ship:control:fore to 0.1.
-		} else if (istVx < zielVx) {
-			set ship:control:fore to -0.1.
-		} else {
-			set ship:control:fore to 0.
-		}
-		if (istVy < (zielVy-toleranz)) and (istVy < (zielVy+toleranz)) {
-			set ship:control:starboard to 0.1.
-		} else if (istVy < zielVy) {
-			set ship:control:starboard to -0.1.
-		} else {
-			set ship:control:starboard to 0.
-		}
-		if (istVz < (zielVz-toleranz)) and (istVz < (zielVz+toleranz)) {
-			set ship:control:top to 0.1.
-		} else if (istVz < zielVz) {
-			set ship:control:top to -0.1.
-		} else {
-			set ship:control:top to 0.
-		}
-
-		print "istVx :"+istVx.
-		print "zielVx:"+zielVx.
-		print "ndposx:"+zielPort:nodeposition:x.
-		wait 1.
+	lock steering to zielPunktA.
+	
+	set letzterV to zielPunktA.
+	//lock korrekturVektor to (letzterV-zielPunktA):direction.
+	until (zielPunktA:mag < 3) {
+		wait 0.2.
+		print "ziel :"+zielPunktA at (0,0).
+		print "dist :"+zielPunktA:mag at (0,1).
+		print "zielrichtung :"+zielPunktA:direction at (0,2).
+		set jetztV to (letzterV - zielPunktA).
+		print "eig.richtung :"+jetztV:direction at (0,3).
+		set letzerV to zielPunktA.
 	}
-
-	print zielPort:nodeposition:x.
+	rcs on.
+	set ship:control:fore to -0.5.
+	wait 1.
+	set ship:control:fore to 0.
+	rcs off.
 
 	print "Erfolgreich angedockt -- beende.".
 	return 0.
