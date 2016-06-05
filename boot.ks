@@ -8,6 +8,6 @@ until not listenIterator:next {
 	print "Kopiere "+listenIterator:value.
 	copy listenIterator:value from 0.
 }
-print "Dateien kopiert."
+print "Dateien kopiert.".
 list files.
 
