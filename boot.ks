@@ -10,4 +10,6 @@ until not listenIterator:next {
 }
 print "Dateien kopiert.".
 list files.
-
+print "Loesche Boot-Skript.".
+delete boot.ks.
+print "Operation abgeschlossen.".
